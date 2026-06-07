@@ -1,0 +1,8 @@
+.venv/
+ML_tree.png
+__pycache__/
+*.pyc
+
+.DS_Store
+
+model.pkl
