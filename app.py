@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 import joblib
-from pydantic import BaseModel
+from pydantic import BaseModel # Pydantic validates and converts input data based on python type annotations.
 
 app = FastAPI() # Create Object Instance
 
-class MatchFeatures(BaseModel):
-    home_form: float
+class MatchFeatures(BaseModel): # Creating class for data validation and parsing using python Type annotation
+    home_form: float # Python Type Annotation
     away_form: float
     home_goal_last5: float
     away_goal_last5: float
@@ -15,10 +15,11 @@ class MatchFeatures(BaseModel):
     Away_GD: float
 
 # Load The Saved Models
-forest = joblib.load("forest_model.pkl")
 logistic = joblib.load("logistic_model.pkl")
+forest = joblib.load("forest_model.pkl")
 xgboost = joblib.load("xgboost_model.pkl")
 
+# GET requet created
 @app.get("/") # When root(/) is called, return the following is executed. This is called the Decorator.
 def root(): # Function called when root(/) request is made
     return {
@@ -26,8 +27,9 @@ def root(): # Function called when root(/) request is made
     }
 
 
-@app.post("/predict")
-def predict(match:MatchFeatures):
+#Post request created
+@app.post("/predict") # Whenever somebody send a POST request to /predict, run the function below.
+def predict(match:MatchFeatures): # match is an object of MatchFeatures which is a JSON file
     features = [[
         match.home_form,
         match.away_form,
@@ -43,14 +45,16 @@ def predict(match:MatchFeatures):
     predict2 = forest.predict(features)[0]
     predict3 = xgboost.predict(features)[0]
 
-    labels = {
+    # Converting numeric result to strings for simplicity 
+    labels = { 
         0 : "Draw",
         1 : "Home Win",
         2 : "Away Win"
     }
-
+    
+    # Return the following result when post request is called
     return {
-        "predict1" : labels[int(predict1)],
-        "predict2" : labels[int(predict2)],
-        "predict3" : labels[int(predict3)],
+        "Logistic Regression prediction" : labels[int(predict1)],
+        "Random Forest prediction" : labels[int(predict2)],
+        "XGBoost prediction" : labels[int(predict3)],
     }
