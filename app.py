@@ -1,8 +1,18 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware # For connection between localhost and deployed api on render
 import joblib
 from pydantic import BaseModel # Pydantic validates and converts input data based on python type annotations.
-
+    
 app = FastAPI() # Create Object Instance
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 class MatchFeatures(BaseModel): # Creating class for data validation and parsing using python Type annotation
     home_form: float # Python Type Annotation

@@ -1,5 +1,6 @@
 .venv/
 ML_tree.png
+MyWork.txt
 
 __pycache__/
 *.pyc
